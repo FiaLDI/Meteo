@@ -1,58 +1,61 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useCityStore } from "@/entities/city/model/store";
-import { useState } from "react";
 
 export default function AddCityForm() {
+    const add = useCityStore((s) => s.add);
+    const search = useCityStore((s) => s.search);
+    const searchCities = useCityStore((s) => s.searchCities);
+    const clearSearch = useCityStore((s) => s.clearSearch);
 
-    const add = useCityStore(s => s.add);
+    const [query, setQuery] = useState("");
 
-    const [name, setName] = useState("");
-    const [lat, setLat] = useState("");
-    const [lon, setLon] = useState("");
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            searchCities(query);
+        }, 300);
+
+        return () => clearTimeout(timer);
+    }, [query, searchCities]);
 
     return (
-        <div className="border p-3">
-            <h2>Add custom city from</h2>
-                <form
-                    onSubmit={async e => {
-                        e.preventDefault();
+        <div className="border p-3 rounded flex flex-col gap-2">
+            <h2 className="font-semibold">Add city</h2>
 
-                        await add({
-                            name,
-                            latitude: Number(lat),
-                            longitude: Number(lon)
-                        });
+            <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Start typing city..."
+                className="border p-2 rounded"
+            />
 
-                        setName("");
-                        setLat("");
-                        setLon("");
-                    }}
-                        className="flex gap-2"
-                >
+            {search.length > 0 && (
+                <div className="border rounded overflow-hidden">
+                    {search.map((city) => (
+                        <button
+                            key={`${city.name}-${city.latitude}-${city.longitude}`}
+                            type="button"
+                            className="block w-full text-left px-3 py-2 hover:bg-gray-100"
+                            onClick={async () => {
+                                await add(city.name);
 
-                    <input
-                        placeholder="City"
-                        value={name}
-                        onChange={e => setName(e.target.value)}
-                        className="border p-1"
-                    />
-                    <input
-                        placeholder="Latitude"
-                        value={lat}
-                        onChange={e => setLat(e.target.value)}
-                        className="border p-1"
-                    />
-                    <input
-                        placeholder="Longitude"
-                        value={lon}
-                        onChange={e => setLon(e.target.value)}
-                        className="border p-1"
-                    />
-                    <button>Add</button>
+                                setQuery("");
 
-                </form>
-            </div>
+                                clearSearch();
+                            }}
+                        >
+                            <div className="font-medium">
+                                {city.name}
+                            </div>
+
+                            <div className="text-xs text-gray-500">
+                                {city.latitude}, {city.longitude}
+                            </div>
+                        </button>
+                    ))}
+                </div>
+            )}
+        </div>
     );
-
 }

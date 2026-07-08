@@ -14,7 +14,7 @@ export function WeathertoreProvider({
   const initialized = useRef(false);
 
   if (!initialized.current) {
-    useWeatherStore.setState({ weather });
+    useWeatherStore.getInitialState()
     initialized.current = true;
   }
 

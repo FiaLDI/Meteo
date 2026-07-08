@@ -1,22 +1,24 @@
 import { fetchFromApi } from "@/shared/api/client";
+import { City, CitySearchResult } from "./types";
 
-export interface City {
-    id: string;
-    name: string;
-    latitude: number;
-    longitude: number;
-}
+
 
 export const CityApi = {
     getAll() {
         return fetchFromApi<City[]>("/cities");
     },
 
-    create(data: Omit<City, "id">) {
-        return fetchFromApi<City, Omit<City, "id">>("/cities", {
+    create(name: string) {
+        return fetchFromApi<City, { name: string }>("/cities", {
             method: "POST",
-            body: data,
+            body: { name },
         });
+    },
+
+    search(name: string) {
+        return fetchFromApi<CitySearchResult[]>(
+            `/cities/search?name=${encodeURIComponent(name)}`
+        );
     },
 
     remove(id: string) {
