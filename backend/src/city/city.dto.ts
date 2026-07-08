@@ -19,3 +19,15 @@ export interface CityResult {
   timezone: string;
   population?: number;
 }
+
+export interface CityCoordinatesDto {
+  name: string;
+  latitude: number;
+  longitude: number;
+}
+
+export interface CityCrateDto {
+    name: string;
+    latitude: number;
+    longitude: number;
+}
