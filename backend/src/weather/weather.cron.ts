@@ -16,9 +16,10 @@ export class WeatherCron {
 
     for (const city of cities) {
       try {
-        const weather = await this.api.getWeather(
+        const weather = await this.api.getForecast(
           city.latitude,
           city.longitude,
+          1
         );
 
         await this.prisma.weather.create({

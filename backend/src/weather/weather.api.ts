@@ -1,22 +1,29 @@
 import { Injectable } from '@nestjs/common';
+import { ForecastResponse } from './weather.dto';
 
 @Injectable()
 export class WeatherApiService {
-  async getWeather(latitude: number, longitude: number) {
-    const url =
-      `https://api.open-meteo.com/v1/forecast` +
-      `?latitude=${latitude}` +
-      `&longitude=${longitude}` +
-      `&daily=temperature_2m_max,temperature_2m_min,wind_speed_10m_max` +
-      `&forecast_days=1` +
-      `&timezone=auto`;
+  private readonly baseUrl = 'https://api.open-meteo.com/v1/forecast';
 
-    const response = await fetch(url);
+  async getForecast(latitude: number, longitude: number, days: number = 1): Promise<ForecastResponse> {
 
-    if (!response.ok) {
-      throw new Error('Weather API unavailable');
-    }
+      const params = new URLSearchParams({
+        latitude: latitude.toString(),
+        longitude: longitude.toString(),
+        daily: 'temperature_2m_max,temperature_2m_min,wind_speed_10m_max',
+        forecast_days: days.toString(),
+        timezone: 'auto',
+      });
 
-    return response.json();
+      const url = `${this.baseUrl}?${params}`;
+      
+
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error('Weather API unavailable');
+      }
+
+      return response.json();
   }
 }
