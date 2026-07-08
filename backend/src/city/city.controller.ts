@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  Query,
 } from '@nestjs/common';
 import { CityService } from './city.service';
 
@@ -24,14 +25,10 @@ export class CityController {
     @Body()
     body: {
       name: string;
-      latitude: number;
-      longitude: number;
     },
   ) {
     return this.cityService.create(
       body.name,
-      body.latitude,
-      body.longitude,
     );
   }
 
@@ -40,5 +37,19 @@ export class CityController {
     @Param('id') id: string,
   ) {
     return this.cityService.remove(id);
+  }
+
+  @Get('search')
+  async search(
+    @Query('name') name: string,
+  ) {
+    return this.cityService.search(name);
+  }
+
+  @Get('coordinates')
+  async findCoordinate(
+    @Query('name') name: string,
+  ) {
+    return this.cityService.findCoordinate(name);
   }
 }

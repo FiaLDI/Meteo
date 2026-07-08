@@ -1,6 +1,7 @@
 
 export interface Weather {
     city: string;
+    day: number;
     date: string;
     min: number;
     max: number;
@@ -9,5 +10,6 @@ export interface Weather {
 }
 
 export interface FetchWeatherParams {
-    city?: string;
+    city: string;
+    day: number;
 }

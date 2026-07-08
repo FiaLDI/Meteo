@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { WeatherService } from './weather.service';
 
 @Controller('weather')
@@ -8,9 +8,13 @@ export class WeatherController {
   ) {}
 
   @Get(':city')
-  async getWeather(
+  getWeather(
     @Param('city') city: string,
+    @Query('day') day = '0',
   ) {
-    return this.weatherService.getWeather(city);
+    return this.weatherService.getWeather(
+      city,
+      Number(day),
+    );
   }
 }

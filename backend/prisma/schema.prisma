@@ -9,37 +9,32 @@ datasource db {
 
 model City {
   id          String    @id @default(cuid())
-
   name        String    @unique
-
   latitude    Float
-
   longitude   Float
-
   createdAt   DateTime  @default(now())
 
   weather     Weather[]
 }
 
 model Weather {
-  id          String   @id @default(cuid())
+  id        String   @id @default(cuid())
 
-  cityId      String
-  city        City     @relation(fields: [cityId], references: [id], onDelete: Cascade)
+  cityId    String
 
-  date        DateTime
+  day       Int
 
-  min         Float
+  date      DateTime
 
-  max         Float
+  min       Float
+  max       Float
+  wind      Float
 
-  wind        Float
+  isStale   Boolean
 
-  isStale     Boolean  @default(false)
+  createdAt DateTime @default(now())
 
-  createdAt   DateTime @default(now())
+  city City @relation(fields: [cityId], references: [id], onDelete: Cascade)
 
-  @@index([cityId])
-
-  @@index([cityId, createdAt])
+  @@unique([cityId, day])
 }
