@@ -20,7 +20,7 @@ export const AddCityForm = () => {
     }, [query, searchCities]);
 
     return (
-        <div className="border p-3 rounded flex flex-col gap-2">
+        <div className=" pb-3  flex flex-col gap-2">
             <h2 className="font-semibold">Add city</h2>
 
             <input
@@ -29,9 +29,10 @@ export const AddCityForm = () => {
                 placeholder="Start typing city..."
                 className="border p-2 rounded"
             />
-
+            
+            <div className="relative">
             {search.length > 0 && (
-                <div className="border rounded overflow-hidden">
+                <div className="border rounded w-full overflow-scroll bg-gray-700 absolute z-10">
                     {search.map((city) => (
                         <button
                             key={`${city.name}-${city.latitude}-${city.longitude}`}
@@ -56,6 +57,7 @@ export const AddCityForm = () => {
                     ))}
                 </div>
             )}
+            </div>
         </div>
     );
 }

@@ -1,22 +1,35 @@
 "use client";
 
+import { Trash2 } from "lucide-react";
 import { CityCardProps } from "../model/types";
 
-export const CityCard = ({ children, remove, city } : CityCardProps) => {
-
+export const CityCard = ({
+    active,
+    remove,
+    city,
+    isActive,
+}: CityCardProps) => {
     return (
-        <div className="bg-gray-900 p-3">
-            <div className="flex gap-3 items-center">
-                <h3>NAME: {city.name}</h3>
-                <button
-                    className="bg-red-600 p-0"
-                    onClick={() => remove(city.id)}
-                >
-                    DEL
-                </button>
-            </div>
+        <div className="flex items-center gap-2">
+            <button
+                type="button"
+                onClick={() => remove(city.id)}
+                className="rounded-md bg-red-600 p-2 text-white transition hover:bg-red-700"
+                aria-label={`Delete ${city.name}`}
+            >
+                <Trash2 size={18} />
+            </button>
 
-            {children}
+            <button
+                type="button"
+                onClick={() => active(city.id)}
+                className="w-full flex-1 rounded-lg bg-gray-900 p-3 text-left transition hover:bg-gray-800 data-[active=true]:bg-gray-600"
+                data-active={isActive}
+            >
+                <h3 className="font-medium">
+                    {city.name}
+                </h3>
+            </button>
         </div>
-    )
-}
+    );
+};

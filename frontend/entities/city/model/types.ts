@@ -12,14 +12,17 @@ export interface City {
 }
 
 export interface Store {
+    activeCityId: string | null;
     cities: City[];
-    search: CitySearchResult[];
+    search: CitySearchResult[];    
 
     load(): Promise<void>;
 
     searchCities(text: string): Promise<void>;
 
     clearSearch(): void;
+
+    setActive(id: string): void;
 
     add(name: string): Promise<void>;
 
@@ -28,7 +31,8 @@ export interface Store {
 
 
 export interface CityCardProps { 
-    children:React.ReactNode, 
+    active: (id: string) => void,
     remove: (id: string) => void, 
-    city: City 
+    city: City,
+    isActive: boolean
 }

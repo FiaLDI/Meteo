@@ -12,3 +12,5 @@ export interface WeatherResponse {
     city: string;
     forecast: WeatherDay[];
 }
+
+export type ViewMode = "today" | "3" | "7" | "14";

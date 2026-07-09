@@ -1,8 +1,12 @@
-import { WeaterList } from "@/widgets/weather-list";
+import { CityList } from "@/widgets/city-list";
+import { WeatherList } from "@/widgets/weather-list";
 
 export default async function Home() {
 
   return (
-      <WeaterList />
+      <div className="flex flex-col lg:grid lg:grid-cols-3">
+        <CityList />
+        <WeatherList />
+      </div>
   );
 }

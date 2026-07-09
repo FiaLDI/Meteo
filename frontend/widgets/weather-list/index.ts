@@ -1,1 +1,1 @@
-export * from "./ui/WeaterList"
+export * from "./ui/WeatherList"
