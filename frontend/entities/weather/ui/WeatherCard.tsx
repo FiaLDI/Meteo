@@ -8,10 +8,7 @@ export const WeatherCard = ({ city }: {
 }) => {
     const [day, setDay] = useState(0);
 
-    const weather = useWeatherStore((s) => s.weather);
-    const loading = useWeatherStore((s) => s.loading);
-    const errors = useWeatherStore((s) => s.errors);
-    const loadWeather = useWeatherStore((s) => s.loadWeather);
+    const {weather, loading, errors, loadWeather} = useWeatherStore();
 
     useEffect(() => {
         loadWeather(city, day);
@@ -29,11 +26,29 @@ export const WeatherCard = ({ city }: {
                 value={day}
                 onChange={(e) => setDay(Number(e.target.value))}
             >
-                {Array.from({ length: 14 }, (_, i) => (
-                    <option key={i} value={i}>
-                        {i + 1} day
-                    </option>
-                ))}
+                {Array.from({ length: 14 }, (_, i) => {
+                    const date = new Date();
+                    date.setDate(date.getDate() + i);
+
+                    let label: string;
+
+                    if (i === 0) {
+                        label = "Today";
+                    } else if (i === 1) {
+                        label = "Tomorrow";
+                    } else {
+                        label = date.toLocaleDateString("ru-RU", {
+                            day: "2-digit",
+                            month: "2-digit",
+                        });
+                    }
+
+                    return (
+                        <option key={i} value={i}>
+                            {label}
+                        </option>
+                    );
+                })}
             </select>
 
             {isLoading && <p>Loading...</p>}
