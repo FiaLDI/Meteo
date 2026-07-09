@@ -35,6 +35,7 @@ export class WeatherService {
         max: item.max,
         wind: item.wind,
         isStale: item.isStale,
+        weatherCode: item.weatherCode,
       })),
     };
   }

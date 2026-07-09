@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useWeatherStore } from "../model/store";
+import { WeatherIcon } from "@/shared";
 
 type ViewMode = "today" | "3" | "7" | "14";
 
@@ -80,6 +81,8 @@ export const WeatherCard = ({
                             <h3 className="mb-2 font-semibold">
                                 {label}
                             </h3>
+
+                            <WeatherIcon code={item.weatherCode}  />
 
                             <p>Date: {item.date}</p>
                             <p>Min: {item.min}°</p>

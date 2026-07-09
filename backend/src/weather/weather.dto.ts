@@ -16,6 +16,7 @@ interface ForecastDailyUnits {
   temperature_2m_max: string;
   temperature_2m_min: string;
   wind_speed_10m_max: string;
+  weather_code: number;
 }
 
 interface ForecastDaily {
@@ -23,4 +24,5 @@ interface ForecastDaily {
   temperature_2m_max: number[];
   temperature_2m_min: number[];
   wind_speed_10m_max: number[];
+  weather_code: number;
 }

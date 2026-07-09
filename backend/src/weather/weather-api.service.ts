@@ -10,7 +10,7 @@ export class WeatherApiService {
       const params = new URLSearchParams({
         latitude: latitude.toString(),
         longitude: longitude.toString(),
-        daily: 'temperature_2m_max,temperature_2m_min,wind_speed_10m_max',
+        daily: 'weather_code,temperature_2m_max,temperature_2m_min,wind_speed_10m_max',
         forecast_days: days.toString(),
         timezone: 'auto',
       });

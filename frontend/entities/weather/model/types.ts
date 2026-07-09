@@ -5,6 +5,7 @@ export interface WeatherDay {
     max: number;
     wind: number;
     isStale: boolean;
+    weatherCode: number,
 }
 
 export interface WeatherResponse {
