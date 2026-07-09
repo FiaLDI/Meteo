@@ -1,19 +1,8 @@
-
-import { Weather, WeatherApi, WeathertoreProvider } from "@/entities/weather";
-import AddCityForm from "@/features/add-city/AddCityForm";
-import CityList from "@/widgets/CityList/CityList";
+import { WeaterList } from "@/widgets/weather-list";
 
 export default async function Home() {
 
   return (
-    <WeathertoreProvider weather={null}>
-      <div className=" bg-gray-700 h-screen">
-        <h1 className="bg-gray-900 p-3 text-2xl">Meteo</h1>
-
-        <AddCityForm />
-
-        <CityList />
-      </div>
-    </WeathertoreProvider>
+      <WeaterList />
   );
 }

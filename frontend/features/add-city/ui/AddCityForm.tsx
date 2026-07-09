@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useCityStore } from "@/entities/city/model/store";
 
-export default function AddCityForm() {
+export const AddCityForm = () => {
     const add = useCityStore((s) => s.add);
     const search = useCityStore((s) => s.search);
     const searchCities = useCityStore((s) => s.searchCities);

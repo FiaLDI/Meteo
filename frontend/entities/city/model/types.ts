@@ -25,3 +25,10 @@ export interface Store {
 
     remove(id: string): Promise<void>;
 }
+
+
+export interface CityCardProps { 
+    children:React.ReactNode, 
+    remove: (id: string) => void, 
+    city: City 
+}

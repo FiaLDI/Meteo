@@ -3,11 +3,9 @@
 import { useEffect, useState } from "react";
 import { useWeatherStore } from "../model/store";
 
-interface Props {
+export const WeatherCard = ({ city }: {
     city: string;
-}
-
-export default function WeatherCard({ city }: Props) {
+}) => {
     const [day, setDay] = useState(0);
 
     const weather = useWeatherStore((s) => s.weather);
@@ -17,7 +15,7 @@ export default function WeatherCard({ city }: Props) {
 
     useEffect(() => {
         loadWeather(city, day);
-    }, [city, day]);
+    }, [loadWeather, city, day]);
 
     const current = weather?.[city]?.[day];
     const isLoading = loading?.[city]?.[day];
