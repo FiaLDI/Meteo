@@ -1,6 +1,4 @@
-
-export interface Weather {
-    city: string;
+export interface WeatherDay {
     day: number;
     date: string;
     min: number;
@@ -9,7 +7,7 @@ export interface Weather {
     isStale: boolean;
 }
 
-export interface FetchWeatherParams {
+export interface WeatherResponse {
     city: string;
-    day: number;
+    forecast: WeatherDay[];
 }

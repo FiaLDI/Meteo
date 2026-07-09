@@ -2,84 +2,69 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 import { WeatherApi } from "./api";
-import { Weather } from "./types";
+import { WeatherResponse } from "./types";
 
 interface WeatherStore {
-    weather: Record<string, Record<number, Weather>>;
-    loading: Record<string, Record<number, boolean>>;
-    errors: Record<string, Record<number, string | null>>;
+    weather: Record<string, WeatherResponse>;
+    loading: Record<string, boolean>;
+    errors: Record<string, string | null>;
 
-    loadWeather(city: string, day: number): Promise<void>;
+    loadWeather(city: string): Promise<void>;
 }
 
 export const useWeatherStore = create<WeatherStore>()(
     persist(
-        (set) => ({
+        (set, get) => ({
             weather: {},
             loading: {},
             errors: {},
 
-            async loadWeather(city, day) {
+            async loadWeather(city) {
+                // Не загружаем повторно, если данные уже есть
+                if (get().weather[city]) {
+                    return;
+                }
+
                 set((state) => ({
                     loading: {
                         ...state.loading,
-                        [city]: {
-                            ...state.loading[city],
-                            [day]: true,
-                        },
+                        [city]: true,
+                    },
+                    errors: {
+                        ...state.errors,
+                        [city]: null,
                     },
                 }));
 
                 try {
-                    const weather = await WeatherApi.fetchWeather({
-                        city,
-                        day,
-                    });
+                    const weather = await WeatherApi.fetchWeather(city);
 
                     set((state) => ({
                         weather: {
                             ...state.weather,
-                            [city]: {
-                                ...state.weather[city],
-                                [day]: weather,
-                            },
+                            [city]: weather,
                         },
-
                         loading: {
                             ...state.loading,
-                            [city]: {
-                                ...state.loading[city],
-                                [day]: false,
-                            },
+                            [city]: false,
                         },
-
                         errors: {
                             ...state.errors,
-                            [city]: {
-                                ...state.errors[city],
-                                [day]: null,
-                            },
+                            [city]: null,
                         },
                     }));
                 } catch (e) {
                     set((state) => ({
                         loading: {
                             ...state.loading,
-                            [city]: {
-                                ...state.loading[city],
-                                [day]: false,
-                            },
+                            [city]: false,
                         },
-
                         errors: {
                             ...state.errors,
-                            [city]: {
-                                ...state.errors[city],
-                                [day]:
-                                    e instanceof Error
-                                        ? e.message
-                                        : "Unknown error",
-                            },
+                            [city]:
+                                e instanceof Error
+                                    ? e.message
+                                    : "Unknown error",
                         },
                     }));
                 }
@@ -87,7 +72,7 @@ export const useWeatherStore = create<WeatherStore>()(
         }),
         {
             name: "weather-store",
-            version: 2,
+            version: 3,
         }
     )
 );

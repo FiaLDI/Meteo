@@ -1,78 +1,99 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useWeatherStore } from "../model/store";
 
-export const WeatherCard = ({ city }: {
+type ViewMode = "today" | "3" | "7" | "14";
+
+export const WeatherCard = ({
+    city,
+}: {
     city: string;
 }) => {
-    const [day, setDay] = useState(0);
+    const [mode, setMode] = useState<ViewMode>("today");
 
-    const {weather, loading, errors, loadWeather} = useWeatherStore();
+    const { weather, loading, errors, loadWeather } = useWeatherStore();
 
     useEffect(() => {
-        loadWeather(city, day);
-    }, [loadWeather, city, day]);
+        loadWeather(city);
+    }, [city, loadWeather]);
 
-    const current = weather?.[city]?.[day];
-    const isLoading = loading?.[city]?.[day];
-    const error = errors?.[city]?.[day];
+    const forecast = weather?.[city]?.forecast;
+    const isLoading = loading?.[city];
+    const error = errors?.[city];
+
+    const items = useMemo(() => {
+        if (!forecast) return [];
+
+        switch (mode) {
+            case "today":
+                return forecast.slice(0, 1);
+            case "3":
+                return forecast.slice(0, 3);
+            case "7":
+                return forecast.slice(0, 7);
+            case "14":
+                return forecast;
+        }
+    }, [forecast, mode]);
 
     return (
-        <div className="mt-3 flex flex-col gap-2">
-
+        <div className="mt-3 flex flex-col gap-3">
             <select
                 className="border rounded p-1"
-                value={day}
-                onChange={(e) => setDay(Number(e.target.value))}
+                value={mode}
+                onChange={(e) => setMode(e.target.value as ViewMode)}
             >
-                {Array.from({ length: 14 }, (_, i) => {
-                    const date = new Date();
-                    date.setDate(date.getDate() + i);
+                <option value="today">Today</option>
+                <option value="3">Next 3 days</option>
+                <option value="7">Next 7 days</option>
+                <option value="14">Next 14 days</option>
+            </select>
 
+            {isLoading && <p>Loading...</p>}
+
+            {!isLoading && error && (
+                <p className="text-red-500">{error}</p>
+            )}
+
+            {!isLoading &&
+                !error &&
+                items.map((item, index) => {
                     let label: string;
 
-                    if (i === 0) {
+                    if (index === 0) {
                         label = "Today";
-                    } else if (i === 1) {
+                    } else if (index === 1) {
                         label = "Tomorrow";
                     } else {
-                        label = date.toLocaleDateString("ru-RU", {
+                        label = new Date(item.date).toLocaleDateString("ru-RU", {
                             day: "2-digit",
                             month: "2-digit",
                         });
                     }
 
                     return (
-                        <option key={i} value={i}>
-                            {label}
-                        </option>
+                        <div
+                            key={item.day}
+                            className="rounded border p-3"
+                        >
+                            <h3 className="mb-2 font-semibold">
+                                {label}
+                            </h3>
+
+                            <p>Date: {item.date}</p>
+                            <p>Min: {item.min}°</p>
+                            <p>Max: {item.max}°</p>
+                            <p>Wind: {item.wind} м/с</p>
+
+                            {item.isStale && (
+                                <p className="text-yellow-500">
+                                    ⚠ Cached weather
+                                </p>
+                            )}
+                        </div>
                     );
                 })}
-            </select>
-
-            {isLoading && <p>Loading...</p>}
-
-            {!isLoading && error && (
-                <p className="text-red-500">
-                    {error}
-                </p>
-            )}
-
-            {!isLoading && !error && current && (
-                <>
-                    <p>Date: {current.date}</p>
-                    <p>Min: {current.min}°</p>
-                    <p>Max: {current.max}°</p>
-                    <p>Wind: {current.wind} м/с</p>
-
-                    {current.isStale && (
-                        <p className="text-yellow-500">
-                            ⚠ Cached weather
-                        </p>
-                    )}
-                </>
-            )}
         </div>
     );
-}
+};
