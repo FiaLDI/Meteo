@@ -4,4 +4,4 @@
 docker compose up -d
 ```
 
-![alt text](image-1.png)
+![alt text](image.png)
