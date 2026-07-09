@@ -2,64 +2,50 @@
 
 import { useEffect, useState } from "react";
 import { useWeatherStore } from "../model/store";
+import { ViewMode } from "../model/types";
+import { ForecastList } from "./ForecastList";
+import { ForecastSelect } from "./ForecastSelect";
 
-interface Props {
+interface WeatherCardProps {
     city: string;
 }
 
-export default function WeatherCard({ city }: Props) {
-    const [day, setDay] = useState(0);
+export const WeatherCard = ({
+    city,
+}: WeatherCardProps) => {
+    const [mode, setMode] = useState<ViewMode>("today");
 
-    const weather = useWeatherStore((s) => s.weather);
-    const loading = useWeatherStore((s) => s.loading);
-    const errors = useWeatherStore((s) => s.errors);
-    const loadWeather = useWeatherStore((s) => s.loadWeather);
+    const { weather, loading, errors, loadWeather } = useWeatherStore();
 
     useEffect(() => {
-        loadWeather(city, day);
-    }, [city, day]);
-
-    const current = weather?.[city]?.[day];
-    const isLoading = loading?.[city]?.[day];
-    const error = errors?.[city]?.[day];
+        loadWeather(city);
+    }, [city, loadWeather]);
 
     return (
-        <div className="mt-3 flex flex-col gap-2">
+        <div className="p-6 flex flex-col gap-3">
+            <h2 className="text-xl font-semibold">
+                {city}
+            </h2>
 
-            <select
-                className="border rounded p-1"
-                value={day}
-                onChange={(e) => setDay(Number(e.target.value))}
-            >
-                {Array.from({ length: 14 }, (_, i) => (
-                    <option key={i} value={i}>
-                        {i + 1} day
-                    </option>
-                ))}
-            </select>
+            <ForecastSelect
+                value={mode}
+                onChange={setMode}
+            />
 
-            {isLoading && <p>Loading...</p>}
+            {loading[city] && <p>Loading...</p>}
 
-            {!isLoading && error && (
+            {errors[city] && (
                 <p className="text-red-500">
-                    {error}
+                    {errors[city]}
                 </p>
             )}
-
-            {!isLoading && !error && current && (
-                <>
-                    <p>Date: {current.date}</p>
-                    <p>Min: {current.min}°</p>
-                    <p>Max: {current.max}°</p>
-                    <p>Wind: {current.wind} м/с</p>
-
-                    {current.isStale && (
-                        <p className="text-yellow-500">
-                            ⚠ Cached weather
-                        </p>
-                    )}
-                </>
+    
+            {!loading[city] && !errors[city] && (
+                <ForecastList
+                    forecast={weather[city]?.forecast}
+                    mode={mode}
+                />
             )}
         </div>
     );
-}
+};

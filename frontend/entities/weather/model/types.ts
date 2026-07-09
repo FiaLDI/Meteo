@@ -1,15 +1,16 @@
-
-export interface Weather {
-    city: string;
+export interface WeatherDay {
     day: number;
     date: string;
     min: number;
     max: number;
     wind: number;
     isStale: boolean;
+    weatherCode: number,
 }
 
-export interface FetchWeatherParams {
+export interface WeatherResponse {
     city: string;
-    day: number;
+    forecast: WeatherDay[];
 }
+
+export type ViewMode = "today" | "3" | "7" | "14";

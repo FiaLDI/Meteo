@@ -4,11 +4,20 @@ import { Store } from "./types";
 
 
 export const useCityStore = create<Store>((set, get) => ({
+    activeCityId: null,
     cities: [],
 
     async load() {
         const cities = await CityApi.getAll();
-        set({ cities });
+        const current = get().activeCityId;
+
+        set({
+            cities,
+            activeCityId:
+                cities.some(city => city.id === current)
+                    ? current
+                    : cities[0]?.id ?? null,
+        });
     },
 
     async add(city) {
@@ -19,6 +28,10 @@ export const useCityStore = create<Store>((set, get) => ({
     async remove(id) {
         await CityApi.remove(id);
         await get().load();
+    },
+
+    setActive(id) {
+        set({activeCityId: id})
     },
 
     search: [],

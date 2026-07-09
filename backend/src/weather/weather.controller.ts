@@ -10,11 +10,7 @@ export class WeatherController {
   @Get(':city')
   getWeather(
     @Param('city') city: string,
-    @Query('day') day = '0',
   ) {
-    return this.weatherService.getWeather(
-      city,
-      Number(day),
-    );
+    return this.weatherService.getWeather(city);
   }
 }

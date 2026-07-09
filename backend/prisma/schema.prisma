@@ -29,6 +29,7 @@ model Weather {
   min       Float
   max       Float
   wind      Float
+  weatherCode Int
 
   isStale   Boolean
 

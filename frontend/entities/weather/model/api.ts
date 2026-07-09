@@ -1,10 +1,10 @@
 import { fetchFromApi } from "@/shared/api/client";
-import { FetchWeatherParams, Weather } from "./types";
+import { WeatherResponse } from "./types";
 
 export const WeatherApi = {
-    fetchWeather(params: FetchWeatherParams) {
-        return fetchFromApi<Weather>(
-            `/weather/${encodeURIComponent(params.city)}?day=${params.day}`
+    fetchWeather(city: string) {
+        return fetchFromApi<WeatherResponse>(
+            `/weather/${encodeURIComponent(city)}`
         );
     },
 };

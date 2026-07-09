@@ -40,11 +40,13 @@ export class WeatherSyncService {
             min: weather.daily.temperature_2m_min[day],
             max: weather.daily.temperature_2m_max[day],
             wind: weather.daily.wind_speed_10m_max[day],
+            weatherCode: weather.daily.weather_code[day],
             isStale: false,
           },
           create: {
             cityId: city.id,
             day,
+            weatherCode: weather.daily.weather_code[day],
             date: new Date(weather.daily.time[day]),
             min: weather.daily.temperature_2m_min[day],
             max: weather.daily.temperature_2m_max[day],
