@@ -3,32 +3,26 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
 import { CityCoordinatesDto } from './city.dto';
 import { CityApiService } from './city-api.service';
 import { WeatherSyncService } from '../weather/weather-sync.service';
+import { CityRepository } from './city.repository';
 
 
 @Injectable()
 export class CityService {
   constructor(
-    private readonly prisma: PrismaService,
+    private readonly cityRepository: CityRepository,
     private readonly geocodingApi: CityApiService,
     private readonly weatherSync: WeatherSyncService,
   ) {}
 
   async findAll() {
-    return this.prisma.city.findMany({
-      orderBy: {
-        name: 'asc',
-      },
-    });
+    return this.cityRepository.findAll();
   }
 
   async create(name: string) {
-    const exists = await this.prisma.city.findUnique({
-      where: { name },
-    });
+    const exists = await this.cityRepository.findByName(name);
 
     if (exists) {
       throw new BadRequestException('City already exists');
@@ -36,12 +30,10 @@ export class CityService {
 
     const city = await this.findCoordinate(name);
 
-    const created = await this.prisma.city.create({
-      data: {
-        name: city.name,
-        latitude: city.latitude,
-        longitude: city.longitude,
-      },
+    const created = await this.cityRepository.create({
+      name: city.name,
+      latitude: city.latitude,
+      longitude: city.longitude,
     });
 
     await this.weatherSync.syncCity(created.id);
@@ -50,21 +42,13 @@ export class CityService {
   }
 
   async remove(id: string) {
-    const city = await this.prisma.city.findUnique({
-      where: {
-        id,
-      },
-    });
+    const city = await this.cityRepository.findById(id);
 
     if (!city) {
       throw new NotFoundException();
     }
 
-    await this.prisma.city.delete({
-      where: {
-        id,
-      },
-    });
+    await this.cityRepository.deleteById(id);
 
     return {
       success: true,

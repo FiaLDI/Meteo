@@ -3,11 +3,16 @@ import { CityController } from './city.controller';
 import { CityService } from './city.service';
 import { CityApiService } from './city-api.service';
 import { WeatherModule } from '../weather/weather.module';
+import { CityRepository } from './city.repository';
+import { PrismaCityRepository } from './prisma-city.repository';
 
 @Module({
   imports: [WeatherModule],
   controllers: [CityController],
-  providers: [CityService, CityApiService],
+  providers: [{
+      provide: CityRepository,
+      useClass: PrismaCityRepository,
+    }, CityService, CityApiService],
   exports: [CityService,],
 })
 export class CityModule {}
