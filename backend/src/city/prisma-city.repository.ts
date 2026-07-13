@@ -16,6 +16,10 @@ export class PrismaCityRepository extends CityRepository {
     });
   }
 
+  findAllDesc() {
+    return this.prisma.city.findMany();
+  }
+
   findById(id: string) {
     return this.prisma.city.findUnique({
       where: {

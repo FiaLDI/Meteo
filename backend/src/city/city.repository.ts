@@ -2,6 +2,7 @@ import { City } from '@prisma/client';
 
 export abstract class CityRepository {
   abstract findAll(): Promise<City[]>;
+  abstract findAllDesc(): Promise<City[]>;
 
   abstract findById(id: string): Promise<City | null>;
 

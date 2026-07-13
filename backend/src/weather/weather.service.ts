@@ -1,29 +1,17 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { WeatherRepository } from './weather.repository';
 
 @Injectable()
 export class WeatherService {
   constructor(
-    private readonly prisma: PrismaService,
+    private readonly weatherRepository: WeatherRepository,
   ) {}
 
   async getWeather(city: string) {
-    const weather = await this.prisma.weather.findMany({
-      where: {
-        city: {
-          name: city,
-        },
-      },
-      include: {
-        city: true,
-      },
-      orderBy: {
-        day: "asc",
-      },
-    });
+    const weather = await this.weatherRepository.findByCity(city);
 
-    if (weather.length === 0) {
-      throw new NotFoundException("Weather not found");
+    if (!weather.length) {
+      throw new NotFoundException('Weather not found');
     }
 
     return {

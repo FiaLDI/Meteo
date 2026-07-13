@@ -4,10 +4,22 @@ import { WeatherService } from './weather.service';
 import { WeatherApiService } from './weather-api.service';
 import { WeatherCron } from './weather.cron';
 import { WeatherSyncService } from './weather-sync.service';
+import { CityRepository } from '../city/city.repository';
+import { PrismaCityRepository } from '../city/prisma-city.repository';
+import { WeatherRepository } from './weather.repository';
+import { PrismaWeatherRepository } from './prisma-weather.repositrory';
 
 @Module({
   controllers: [WeatherController],
   providers: [
+    {
+      provide: CityRepository,
+      useClass: PrismaCityRepository,
+    },
+    {
+      provide: WeatherRepository,
+      useClass: PrismaWeatherRepository,
+    },
     WeatherService,
     WeatherApiService,
     WeatherSyncService,
