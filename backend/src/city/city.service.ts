@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CityCoordinatesDto } from './city.dto';
-import { CityApiService } from './city-api.service';
+import { CityApiService } from '@/infrastructure/open-meteo';
 import { WeatherSyncService } from '../weather/weather-sync.service';
 import { CityRepository } from './city.repository';
 

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { WeatherController } from './weather.controller';
 import { WeatherService } from './weather.service';
-import { WeatherApiService } from './weather-api.service';
+import { WeatherApiService } from '@/infrastructure/open-meteo';
 import { WeatherCron } from './weather.cron';
 import { WeatherSyncService } from './weather-sync.service';
 import { CityRepository } from '../city/city.repository';

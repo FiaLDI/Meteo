@@ -1,0 +1,240 @@
+diff --git a/backend/src/app.module.ts b/backend/src/app.module.ts
+index 770cead..a860555 100644
+--- a/backend/src/app.module.ts
++++ b/backend/src/app.module.ts
+@@ -1,7 +1,7 @@
+ import { Module } from '@nestjs/common';
+ import { ScheduleModule } from '@nestjs/schedule';
+ 
+-import { PrismaModule } from './prisma/prisma.module';
++import { PrismaModule } from './infrastructure/prisma/prisma.module';
+ import { CityModule } from './city/city.module';
+ import { WeatherModule } from './weather/weather.module';
+ 
+diff --git a/backend/src/city/city-api.service.ts b/backend/src/city/city-api.service.ts
+deleted file mode 100644
+index 7609b8f..0000000
+--- a/backend/src/city/city-api.service.ts
++++ /dev/null
+@@ -1,44 +0,0 @@
+-import { Injectable } from "@nestjs/common";
+-import { CitySearchResponse } from "./city.dto";
+-
+-@Injectable()
+-export class CityApiService {
+-    private readonly baseUrl = 'https://geocoding-api.open-meteo.com/v1/search';
+-    
+-    async getCityCoordinates(name: string): Promise<CitySearchResponse> {
+-        const params = new URLSearchParams({
+-            name: name.toString(),
+-            count: "1",
+-            language: "ru",
+-            format: "json"
+-        });
+-        const url = `${this.baseUrl}?${params}`
+-    
+-        const response = await fetch(url);
+-
+-        if (!response.ok) {
+-            throw new Error('Weather API unavailable');
+-        }
+-
+-        return response.json();
+-    }
+-
+-    async searchCities(text: string): Promise<CitySearchResponse> {
+-        const params = new URLSearchParams({
+-            name: text.toString(),
+-            count: "10",
+-            language: "ru",
+-            format: "json"
+-        });
+-
+-        const url =`${this.baseUrl}?${params}`
+-
+-        const response = await fetch(url);
+-
+-        if (!response.ok) {
+-            throw new Error('Weather API unavailable');
+-        }
+-
+-        return response.json();
+-    }
+-}
+diff --git a/backend/src/city/city.module.ts b/backend/src/city/city.module.ts
+index a354c4f..bd463fc 100644
+--- a/backend/src/city/city.module.ts
++++ b/backend/src/city/city.module.ts
+@@ -1,7 +1,7 @@
+ import { Module } from '@nestjs/common';
+ import { CityController } from './city.controller';
+ import { CityService } from './city.service';
+-import { CityApiService } from './city-api.service';
++import { CityApiService } from '../infrastructure/open-meteo/city-api.service';
+ import { WeatherModule } from '../weather/weather.module';
+ import { CityRepository } from './city.repository';
+ import { PrismaCityRepository } from './prisma-city.repository';
+diff --git a/backend/src/city/city.service.ts b/backend/src/city/city.service.ts
+index 2e341a0..8d584a9 100644
+--- a/backend/src/city/city.service.ts
++++ b/backend/src/city/city.service.ts
+@@ -4,7 +4,7 @@ import {
+   NotFoundException,
+ } from '@nestjs/common';
+ import { CityCoordinatesDto } from './city.dto';
+-import { CityApiService } from './city-api.service';
++import { CityApiService } from '../infrastructure/open-meteo/city-api.service';
+ import { WeatherSyncService } from '../weather/weather-sync.service';
+ import { CityRepository } from './city.repository';
+ 
+diff --git a/backend/src/city/prisma-city.repository.ts b/backend/src/city/prisma-city.repository.ts
+index 37526ad..98fcf84 100644
+--- a/backend/src/city/prisma-city.repository.ts
++++ b/backend/src/city/prisma-city.repository.ts
+@@ -1,5 +1,5 @@
+ import { Injectable } from '@nestjs/common';
+-import { PrismaService } from '../prisma/prisma.service';
++import { PrismaService } from '../infrastructure/prisma/prisma.service';
+ import { CityRepository } from './city.repository';
+ 
+ @Injectable()
+diff --git a/backend/src/prisma/prisma.module.ts b/backend/src/prisma/prisma.module.ts
+deleted file mode 100644
+index 7207426..0000000
+--- a/backend/src/prisma/prisma.module.ts
++++ /dev/null
+@@ -1,9 +0,0 @@
+-import { Global, Module } from '@nestjs/common';
+-import { PrismaService } from './prisma.service';
+-
+-@Global()
+-@Module({
+-  providers: [PrismaService],
+-  exports: [PrismaService],
+-})
+-export class PrismaModule {}
+diff --git a/backend/src/prisma/prisma.service.ts b/backend/src/prisma/prisma.service.ts
+deleted file mode 100644
+index b8aa90b..0000000
+--- a/backend/src/prisma/prisma.service.ts
++++ /dev/null
+@@ -1,33 +0,0 @@
+-import 'dotenv/config';
+-import {
+-  Injectable,
+-  OnModuleDestroy,
+-  OnModuleInit,
+-} from '@nestjs/common';
+-
+-import { PrismaClient } from '@prisma/client';
+-import { PrismaPg } from '@prisma/adapter-pg';
+-
+-@Injectable()
+-export class PrismaService
+-  extends PrismaClient
+-  implements OnModuleInit, OnModuleDestroy
+-{
+-  constructor() {
+-    const adapter = new PrismaPg({
+-      connectionString: process.env.DATABASE_URL!,
+-    });
+-
+-    super({
+-      adapter,
+-    });
+-  }
+-
+-  async onModuleInit() {
+-    await this.$connect();
+-  }
+-
+-  async onModuleDestroy() {
+-    await this.$disconnect();
+-  }
+-}
+diff --git a/backend/src/weather/prisma-weather.repositrory.ts b/backend/src/weather/prisma-weather.repositrory.ts
+index 4a8373b..9190669 100644
+--- a/backend/src/weather/prisma-weather.repositrory.ts
++++ b/backend/src/weather/prisma-weather.repositrory.ts
+@@ -1,6 +1,6 @@
+ import { Injectable } from '@nestjs/common';
+ import { WeatherRepository } from './weather.repository';
+-import { PrismaService } from '../prisma/prisma.service';
++import { PrismaService } from '../infrastructure/prisma/prisma.service';
+ 
+ @Injectable()
+ export class PrismaWeatherRepository extends WeatherRepository {
+diff --git a/backend/src/weather/weather-api.service.ts b/backend/src/weather/weather-api.service.ts
+deleted file mode 100644
+index 9d9ce45..0000000
+--- a/backend/src/weather/weather-api.service.ts
++++ /dev/null
+@@ -1,29 +0,0 @@
+-import { Injectable } from '@nestjs/common';
+-import { ForecastResponse } from './weather.dto';
+-
+-@Injectable()
+-export class WeatherApiService {
+-  private readonly baseUrl = 'https://api.open-meteo.com/v1/forecast';
+-
+-  async getForecast(latitude: number, longitude: number, days: number = 1): Promise<ForecastResponse> {
+-
+-      const params = new URLSearchParams({
+-        latitude: latitude.toString(),
+-        longitude: longitude.toString(),
+-        daily: 'weather_code,temperature_2m_max,temperature_2m_min,wind_speed_10m_max',
+-        forecast_days: days.toString(),
+-        timezone: 'auto',
+-      });
+-
+-      const url = `${this.baseUrl}?${params}`;
+-      
+-
+-      const response = await fetch(url);
+-
+-      if (!response.ok) {
+-        throw new Error('Weather API unavailable');
+-      }
+-
+-      return response.json();
+-  }
+-}
+diff --git a/backend/src/weather/weather-sync.service.ts b/backend/src/weather/weather-sync.service.ts
+index 3b452f8..1687f8b 100644
+--- a/backend/src/weather/weather-sync.service.ts
++++ b/backend/src/weather/weather-sync.service.ts
+@@ -1,5 +1,5 @@
+ import { Injectable } from '@nestjs/common';
+-import { WeatherApiService } from './weather-api.service';
++import { WeatherApiService } from '../infrastructure/open-meteo/weather-api.service';
+ import { WeatherRepository } from './weather.repository';
+ import { CityRepository } from '../city/city.repository';
+ 
+diff --git a/backend/src/weather/weather.module.ts b/backend/src/weather/weather.module.ts
+index cf70d4e..864b186 100644
+--- a/backend/src/weather/weather.module.ts
++++ b/backend/src/weather/weather.module.ts
+@@ -1,7 +1,7 @@
+ import { Module } from '@nestjs/common';
+ import { WeatherController } from './weather.controller';
+ import { WeatherService } from './weather.service';
+-import { WeatherApiService } from './weather-api.service';
++import { WeatherApiService } from '../infrastructure/open-meteo/weather-api.service';
+ import { WeatherCron } from './weather.cron';
+ import { WeatherSyncService } from './weather-sync.service';
+ import { CityRepository } from '../city/city.repository';
+diff --git a/backend/tsconfig.json b/backend/tsconfig.json
+index a3be2cf..bc937f5 100644
+--- a/backend/tsconfig.json
++++ b/backend/tsconfig.json
+@@ -20,6 +20,9 @@
+     "forceConsistentCasingInFileNames": true,
+     "noImplicitAny": false,
+     "strictBindCallApply": false,
+-    "noFallthroughCasesInSwitch": false
++    "noFallthroughCasesInSwitch": false,
++    "paths": {
++      "@/*": ["./src/"]
++    }
+   }
+ }

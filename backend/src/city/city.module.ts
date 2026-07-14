@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { CityController } from './city.controller';
 import { CityService } from './city.service';
-import { CityApiService } from './city-api.service';
+import { CityApiService } from '@/infrastructure/open-meteo';
 import { WeatherModule } from '../weather/weather.module';
 import { CityRepository } from './city.repository';
 import { PrismaCityRepository } from './prisma-city.repository';
