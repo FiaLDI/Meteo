@@ -6,16 +6,19 @@ import {
 import { CityCoordinatesDto } from './city.dto';
 import { CityApiService } from '@/infrastructure/open-meteo';
 import { WeatherSyncService } from '../weather/weather-sync.service';
-import { CityRepository } from './city.repository';
+import { CityRepository } from '../../domain/repositories/city.repository';
+import { CityServiceContract } from './city.service.contract';
 
 
 @Injectable()
-export class CityService {
+export class CityService extends CityServiceContract {
   constructor(
     private readonly cityRepository: CityRepository,
     private readonly geocodingApi: CityApiService,
     private readonly weatherSync: WeatherSyncService,
-  ) {}
+  ) {
+    super();
+  }
 
   async findAll() {
     return this.cityRepository.findAll();

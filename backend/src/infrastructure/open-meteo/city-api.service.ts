@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CitySearchResponse } from "../../city/city.dto";
+import { CitySearchResponse } from "../../application/city/city.dto";
 
 @Injectable()
 export class CityApiService {

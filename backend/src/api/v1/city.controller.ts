@@ -7,7 +7,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { CityService } from './city.service';
+import { CityService } from '../../application/city/city.service';
 
 @Controller('cities')
 export class CityController {

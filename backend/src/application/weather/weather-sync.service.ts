@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { WeatherApiService } from '@/infrastructure/open-meteo';
-import { WeatherRepository } from './weather.repository';
-import { CityRepository } from '../city/city.repository';
+import { WeatherRepository } from '../../domain/repositories/weather.repository';
+import { CityRepository } from '../../domain/repositories/city.repository';
 
 @Injectable()
 export class WeatherSyncService {

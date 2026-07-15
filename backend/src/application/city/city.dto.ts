@@ -31,3 +31,15 @@ export interface CityCrateDto {
     latitude: number;
     longitude: number;
 }
+
+export interface ResponseDto {
+    name: string;
+    id: string;
+    latitude: number;
+    longitude: number;
+    createdAt: Date;
+}
+
+export interface RemoveResponseDto {
+  success: boolean
+}

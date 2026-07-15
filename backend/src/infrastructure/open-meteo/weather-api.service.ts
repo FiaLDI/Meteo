@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ForecastResponse } from '../../weather/weather.dto';
+import { ForecastResponse } from '../../application/weather/weather.dto';
 
 @Injectable()
 export class WeatherApiService {

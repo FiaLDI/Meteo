@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { WeatherRepository } from './weather.repository';
-import { PrismaService } from '../infrastructure/prisma/prisma.service';
+import { WeatherRepository } from '../../domain/repositories/weather.repository';
+import { PrismaService } from '../../infrastructure/prisma/prisma.service';
 
 @Injectable()
 export class PrismaWeatherRepository extends WeatherRepository {

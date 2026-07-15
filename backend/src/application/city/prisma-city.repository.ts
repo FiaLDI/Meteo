@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../infrastructure/prisma/prisma.service';
-import { CityRepository } from './city.repository';
+import { PrismaService } from '../../infrastructure/prisma/prisma.service';
+import { CityRepository } from '../../domain/repositories/city.repository';
 
 @Injectable()
 export class PrismaCityRepository extends CityRepository {

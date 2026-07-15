@@ -1,11 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { WeatherRepository } from './weather.repository';
+import { WeatherRepository } from '../../domain/repositories/weather.repository';
+import { WeatherServiceContract } from '@/application/weather/weather.service.contract';
 
 @Injectable()
-export class WeatherService {
+export class WeatherService extends WeatherServiceContract {
   constructor(
     private readonly weatherRepository: WeatherRepository,
-  ) {}
+  ) {
+    super();
+  }
 
   async getWeather(city: string) {
     const weather = await this.weatherRepository.findByCity(city);
