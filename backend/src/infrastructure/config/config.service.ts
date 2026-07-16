@@ -11,7 +11,7 @@ export class ConfigService {
   }
 
   get port(): number {
-    return Number(process.env.PORT ?? 3000);
+    return Number(process.env.API_PORT ?? 8000);
   }
 
   get isProduction(): boolean {
