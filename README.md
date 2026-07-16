@@ -20,7 +20,7 @@ A full-stack weather application built with Next.js and NestJS. The project peri
 
 ## Architecture
 
-![alt text](arcg.png)
+![alt text](arch.png)
 
 ### Backend
 
