@@ -1,4 +1,5 @@
-import { City } from '@prisma/client';
+import { City } from "../entities/city.entity";
+
 
 export abstract class CityRepository {
   abstract findAll(): Promise<City[]>;

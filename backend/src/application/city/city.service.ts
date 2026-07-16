@@ -8,6 +8,8 @@ import { CityApiService } from '@/infrastructure/open-meteo';
 import { WeatherSyncService } from '../weather/weather-sync.service';
 import { CityRepository } from '../../domain/repositories/city.repository';
 import { CityServiceContract } from './city.service.contract';
+import { City } from '@/domain/entities/city.entity';
+import { CityApplicationMapper } from './city.mapper';
 
 
 @Injectable()
@@ -21,7 +23,9 @@ export class CityService extends CityServiceContract {
   }
 
   async findAll() {
-    return this.cityRepository.findAll();
+    const cities = await this.cityRepository.findAll();
+
+    return CityApplicationMapper.toResponses(cities);
   }
 
   async create(name: string) {
@@ -33,15 +37,17 @@ export class CityService extends CityServiceContract {
 
     const city = await this.findCoordinate(name);
 
-    const created = await this.cityRepository.create({
+    const cityEntity = City.create({
       name: city.name,
       latitude: city.latitude,
       longitude: city.longitude,
     });
 
+    const created = await this.cityRepository.create(cityEntity);
+
     await this.weatherSync.syncCity(created.id);
 
-    return created;
+    return CityApplicationMapper.toResponse(created);
   }
 
   async remove(id: string) {
@@ -67,22 +73,15 @@ export class CityService extends CityServiceContract {
       throw new NotFoundException('City not found');
     }
     
-    return {
-      name: city?.name,
-      latitude: city?.latitude,
-      longitude: city?.longitude
-    }
+    return CityApplicationMapper.toCoordinates(city);
   }
 
   async search(text: string): Promise<CityCoordinatesDto[]> {
     const { results } = await this.geocodingApi.searchCities(text);
 
-    const mappedResult = results?.map((val) => ({
-      name: val.name,
-      latitude: val.latitude,
-      longitude: val.longitude,
-    }));
-
+    const mappedResult =
+      CityApplicationMapper.toCoordinatesList(results ?? []);
+      
     if (!mappedResult?.length) {
       throw new NotFoundException('City not found');
     }

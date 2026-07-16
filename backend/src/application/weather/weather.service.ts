@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { WeatherRepository } from '../../domain/repositories/weather.repository';
-import { WeatherServiceContract } from '@/application/weather/weather.service.contract';
+import { WeatherRepository } from '@/domain/repositories/weather.repository';
+import { WeatherServiceContract } from './weather.service.contract';
+import { WeatherApplicationMapper } from './weather.mapper';
 
 @Injectable()
 export class WeatherService extends WeatherServiceContract {
@@ -11,23 +12,12 @@ export class WeatherService extends WeatherServiceContract {
   }
 
   async getWeather(city: string) {
-    const weather = await this.weatherRepository.findByCity(city);
+    const forecast = await this.weatherRepository.findByCity(city);
 
-    if (!weather.length) {
+    if (!forecast) {
       throw new NotFoundException('Weather not found');
     }
 
-    return {
-      city: weather[0].city.name,
-      forecast: weather.map((item) => ({
-        day: item.day,
-        date: item.date,
-        min: item.min,
-        max: item.max,
-        wind: item.wind,
-        isStale: item.isStale,
-        weatherCode: item.weatherCode,
-      })),
-    };
+    return WeatherApplicationMapper.toResponse(forecast);
   }
 }

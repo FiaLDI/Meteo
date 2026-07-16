@@ -1,24 +1,12 @@
-import { Prisma } from '@prisma/client';
-
-export type WeatherWithCity = Prisma.WeatherGetPayload<{
-  include: {
-    city: true;
-  };
-}>;
+import { Weather } from "../entities/weather.entity";
+import { Forecast } from "../entities/weather.forecast.entity";
 
 export abstract class WeatherRepository {
-  abstract findByCity(city: string): Promise<WeatherWithCity[]>;
+  abstract findByCity(city: string): Promise<Forecast | null>;
 
   abstract upsertForecast(
     cityId: string,
-    forecast: {
-      day: number;
-      date: Date;
-      min: number;
-      max: number;
-      wind: number;
-      weatherCode: number;
-    }[],
+    weather: Weather[],
   ): Promise<void>;
 
   abstract markAsStale(cityId: string): Promise<void>;

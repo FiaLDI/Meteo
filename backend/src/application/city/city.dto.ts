@@ -1,43 +1,15 @@
-export interface CitySearchResponse {
-  results?: CityResult[];
-  generationtime_ms: number;
-}
-
-export interface CityResult {
-  id: number;
-  name: string;
-  latitude: number;
-  longitude: number;
-  elevation?: number;
-  feature_code: string;
-  country_code: string;
-  country: string;
-  admin1?: string;
-  admin2?: string;
-  admin3?: string;
-  admin4?: string;
-  timezone: string;
-  population?: number;
-}
-
 export interface CityCoordinatesDto {
   name: string;
   latitude: number;
   longitude: number;
 }
 
-export interface CityCrateDto {
-    name: string;
-    latitude: number;
-    longitude: number;
-}
-
-export interface ResponseDto {
-    name: string;
-    id: string;
-    latitude: number;
-    longitude: number;
-    createdAt: Date;
+export interface CityResponseDto {
+  name: string;
+  id: string;
+  latitude: number;
+  longitude: number;
+  createdAt: Date;
 }
 
 export interface RemoveResponseDto {

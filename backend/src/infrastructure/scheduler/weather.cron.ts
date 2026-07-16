@@ -1,6 +1,6 @@
 import { Cron } from '@nestjs/schedule';
 import { Injectable } from '@nestjs/common';
-import { WeatherSyncService } from './weather-sync.service';
+import { WeatherSyncService } from '@/application/weather/weather-sync.service';
 
 @Injectable()
 export class WeatherCron {

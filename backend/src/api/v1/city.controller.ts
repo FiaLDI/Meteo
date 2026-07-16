@@ -7,12 +7,12 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { CityService } from '../../application/city/city.service';
+import { CityServiceContract } from '@/application/city/city.service.contract';
 
 @Controller('cities')
 export class CityController {
   constructor(
-    private readonly cityService: CityService,
+    private readonly cityService: CityServiceContract,
   ) {}
 
   @Get()

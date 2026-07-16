@@ -1,10 +1,10 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
-import { WeatherService } from '../../application/weather/weather.service';
+import { WeatherServiceContract } from '@/application/weather/weather.service.contract';
 
 @Controller('weather')
 export class WeatherController {
   constructor(
-    private readonly weatherService: WeatherService,
+    private readonly weatherService: WeatherServiceContract,
   ) {}
 
   @Get(':city')

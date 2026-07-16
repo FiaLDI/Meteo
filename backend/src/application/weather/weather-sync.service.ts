@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { WeatherApiService } from '@/infrastructure/open-meteo';
 import { WeatherRepository } from '../../domain/repositories/weather.repository';
 import { CityRepository } from '../../domain/repositories/city.repository';
+import { Weather } from '@/domain/entities/weather.entity';
 
 @Injectable()
 export class WeatherSyncService {
@@ -28,14 +29,17 @@ export class WeatherSyncService {
       );
 
       for (let day = 0; day < weather.daily.time.length; day++) {
-        const forecast = weather.daily.time.map((_, day) => ({
-          day,
-          date: new Date(weather.daily.time[day]),
-          min: weather.daily.temperature_2m_min[day],
-          max: weather.daily.temperature_2m_max[day],
-          wind: weather.daily.wind_speed_10m_max[day],
-          weatherCode: weather.daily.weather_code[day],
-        }));
+        const forecast = weather.daily.time.map((_, day) =>
+          Weather.create({
+            cityId: city.id,
+            day,
+            date: new Date(weather.daily.time[day]),
+            min: weather.daily.temperature_2m_min[day],
+            max: weather.daily.temperature_2m_max[day],
+            wind: weather.daily.wind_speed_10m_max[day],
+            weatherCode: weather.daily.weather_code[day],
+          }),
+        );
 
         await this.weatherRepository.upsertForecast(city.id, forecast);
       }
