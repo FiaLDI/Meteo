@@ -11,7 +11,6 @@ import { CityServiceContract } from './city.service.contract';
 import { City } from '@/domain/entities/city.entity';
 import { CityApplicationMapper } from './city.mapper';
 
-
 @Injectable()
 export class CityService extends CityServiceContract {
   constructor(
@@ -72,20 +71,19 @@ export class CityService extends CityServiceContract {
     if (!city) {
       throw new NotFoundException('City not found');
     }
-    
+
     return CityApplicationMapper.toCoordinates(city);
   }
 
   async search(text: string): Promise<CityCoordinatesDto[]> {
     const { results } = await this.geocodingApi.searchCities(text);
 
-    const mappedResult =
-      CityApplicationMapper.toCoordinatesList(results ?? []);
-      
+    const mappedResult = CityApplicationMapper.toCoordinatesList(results ?? []);
+
     if (!mappedResult?.length) {
       throw new NotFoundException('City not found');
     }
-    
+
     return mappedResult;
   }
 }

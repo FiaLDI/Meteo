@@ -1,5 +1,5 @@
-import { Forecast } from "@/domain/entities/weather.forecast.entity";
-import { GetWeatherResponseDto } from "./weather.dto";
+import { Forecast } from '@/domain/entities/weather.forecast.entity';
+import { GetWeatherResponseDto } from './weather.dto';
 
 export class WeatherApplicationMapper {
   static toResponse(forecast: Forecast): GetWeatherResponseDto {

@@ -33,7 +33,7 @@ export interface ForecastResponse {
   daily: ForecastDaily;
 }
 
-interface ForecastDailyUnits {
+export interface ForecastDailyUnits {
   time: string;
   temperature_2m_max: string;
   temperature_2m_min: string;
@@ -41,10 +41,10 @@ interface ForecastDailyUnits {
   weather_code: number;
 }
 
-interface ForecastDaily {
+export interface ForecastDaily {
   time: string[];
   temperature_2m_max: number[];
   temperature_2m_min: number[];
   wind_speed_10m_max: number[];
-  weather_code: number;
+  weather_code: number[];
 }

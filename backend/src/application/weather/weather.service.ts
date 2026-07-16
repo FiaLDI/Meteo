@@ -5,9 +5,7 @@ import { WeatherApplicationMapper } from './weather.mapper';
 
 @Injectable()
 export class WeatherService extends WeatherServiceContract {
-  constructor(
-    private readonly weatherRepository: WeatherRepository,
-  ) {
+  constructor(private readonly weatherRepository: WeatherRepository) {
     super();
   }
 

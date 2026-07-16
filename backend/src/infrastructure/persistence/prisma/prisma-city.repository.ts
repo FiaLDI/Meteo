@@ -17,13 +17,13 @@ export class PrismaCityRepository extends CityRepository {
       },
     });
 
-    return cities.map(CityMapper.toDomain);
+    return cities.map((city) => CityMapper.toDomain(city));
   }
 
   async findAllDesc() {
     const cities = await this.prisma.city.findMany();
 
-    return cities.map(CityMapper.toDomain);
+    return cities.map((city) => CityMapper.toDomain(city));
   }
 
   async findById(id: string) {

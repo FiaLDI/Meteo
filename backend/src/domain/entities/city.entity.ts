@@ -12,13 +12,7 @@ export class City {
     latitude: number;
     longitude: number;
   }): City {
-    return new City(
-      '',
-      data.name,
-      data.latitude,
-      data.longitude,
-      new Date(),
-    );
+    return new City('', data.name, data.latitude, data.longitude, new Date());
   }
 
   static restore(data: {

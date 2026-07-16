@@ -11,9 +11,7 @@ import { CityServiceContract } from '@/application/city/city.service.contract';
 
 @Controller('cities')
 export class CityController {
-  constructor(
-    private readonly cityService: CityServiceContract,
-  ) {}
+  constructor(private readonly cityService: CityServiceContract) {}
 
   @Get()
   async findAll() {
@@ -27,29 +25,21 @@ export class CityController {
       name: string;
     },
   ) {
-    return this.cityService.create(
-      body.name,
-    );
+    return this.cityService.create(body.name);
   }
 
   @Delete(':id')
-  async remove(
-    @Param('id') id: string,
-  ) {
+  async remove(@Param('id') id: string) {
     return this.cityService.remove(id);
   }
 
   @Get('search')
-  async search(
-    @Query('name') name: string,
-  ) {
+  async search(@Query('name') name: string) {
     return this.cityService.search(name);
   }
 
   @Get('coordinates')
-  async findCoordinate(
-    @Query('name') name: string,
-  ) {
+  async findCoordinate(@Query('name') name: string) {
     return this.cityService.findCoordinate(name);
   }
 }

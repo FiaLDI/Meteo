@@ -24,7 +24,7 @@ import { WeatherServiceContract } from './weather.service.contract';
     {
       provide: WeatherServiceContract,
       useClass: WeatherService,
-    },   
+    },
     WeatherApiService,
     WeatherSyncService,
     WeatherCron,

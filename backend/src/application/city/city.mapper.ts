@@ -1,11 +1,8 @@
 import { City } from '@/domain/entities/city.entity';
-import {
-  CityCoordinatesDto,
-  CityResponseDto,
-} from './city.dto';
+import { CityCoordinatesDto, CityResponseDto } from './city.dto';
 
 export class CityApplicationMapper {
-  static toResponse(city: City): CityResponseDto {
+  static toResponse(this: void, city: City): CityResponseDto {
     return {
       id: city.id,
       name: city.name,
@@ -16,7 +13,7 @@ export class CityApplicationMapper {
   }
 
   static toResponses(cities: City[]): CityResponseDto[] {
-    return cities.map(this.toResponse);
+    return cities.map((city) => this.toResponse(city));
   }
 
   static toCoordinates(city: {
@@ -38,6 +35,6 @@ export class CityApplicationMapper {
       longitude: number;
     }[],
   ): CityCoordinatesDto[] {
-    return cities.map(this.toCoordinates);
+    return cities.map((city) => this.toCoordinates(city));
   }
 }

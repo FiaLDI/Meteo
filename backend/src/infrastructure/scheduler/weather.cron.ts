@@ -4,9 +4,7 @@ import { WeatherSyncService } from '@/application/weather/weather-sync.service';
 
 @Injectable()
 export class WeatherCron {
-  constructor(
-    private readonly weatherSync: WeatherSyncService,
-  ) {}
+  constructor(private readonly weatherSync: WeatherSyncService) {}
 
   @Cron('*/10 * * * *')
   async updateWeather() {

@@ -13,5 +13,5 @@ export interface CityResponseDto {
 }
 
 export interface RemoveResponseDto {
-  success: boolean
+  success: boolean;
 }

@@ -1,10 +1,12 @@
+import { Injectable } from '@nestjs/common';
+
 import { Forecast } from '@/domain/entities/weather.forecast.entity';
+import { Weather } from '@/domain/entities/weather.entity';
 import { WeatherRepository } from '@/domain/repositories/weather.repository';
 import { PrismaService } from '@/infrastructure/prisma';
-import { Injectable } from '@nestjs/common';
+
 import { CityMapper } from '../mappers/city.mapper';
 import { WeatherMapper } from '../mappers/weather.mapper';
-import { Weather } from '@/domain/entities/weather.entity';
 
 @Injectable()
 export class PrismaWeatherRepository extends WeatherRepository {
@@ -12,7 +14,7 @@ export class PrismaWeatherRepository extends WeatherRepository {
     super();
   }
 
-  async findByCity(city: string) {
+  async findByCity(city: string): Promise<Forecast | null> {
     const weather = await this.prisma.weather.findMany({
       where: {
         city: {
@@ -27,18 +29,20 @@ export class PrismaWeatherRepository extends WeatherRepository {
       },
     });
 
-    if (!weather.length) {
+    if (weather.length === 0) {
       return null;
     }
 
     return new Forecast(
       CityMapper.toDomain(weather[0].city),
-      weather.map(WeatherMapper.toDomain),
+      weather.map((item) => WeatherMapper.toDomain(item)),
     );
   }
 
-  async upsertForecast(cityId: string, weather: Weather[]) {
+  async upsertForecast(cityId: string, weather: Weather[]): Promise<void> {
     for (const item of weather) {
+      const data = WeatherMapper.toPersistence(item);
+
       await this.prisma.weather.upsert({
         where: {
           cityId_day: {
@@ -46,17 +50,13 @@ export class PrismaWeatherRepository extends WeatherRepository {
             day: item.day,
           },
         },
-        update: {
-          ...WeatherMapper.toPersistence(item),
-        },
-        create: {
-          ...WeatherMapper.toPersistence(item),
-        },
+        update: data,
+        create: data,
       });
     }
   }
 
-  async markAsStale(cityId: string) {
+  async markAsStale(cityId: string): Promise<void> {
     await this.prisma.weather.updateMany({
       where: {
         cityId,

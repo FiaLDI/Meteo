@@ -18,8 +18,9 @@ import { CityServiceContract } from './city.service.contract';
     {
       provide: CityServiceContract,
       useClass: CityService,
-    },    
-    CityApiService],
+    },
+    CityApiService,
+  ],
   exports: [CityServiceContract],
 })
 export class CityModule {}

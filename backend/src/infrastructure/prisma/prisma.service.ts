@@ -1,9 +1,5 @@
 import 'dotenv/config';
-import {
-  Injectable,
-  OnModuleDestroy,
-  OnModuleInit,
-} from '@nestjs/common';
+import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
@@ -16,7 +12,7 @@ export class PrismaService
 {
   constructor(configService: ConfigService) {
     const adapter = new PrismaPg({
-      connectionString: configService.databaseUrl
+      connectionString: configService.databaseUrl,
     });
 
     super({

@@ -1,5 +1,5 @@
-import { City } from "./city.entity";
-import { Weather } from "./weather.entity";
+import { City } from './city.entity';
+import { Weather } from './weather.entity';
 
 export class Forecast {
   constructor(

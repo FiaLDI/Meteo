@@ -10,10 +10,10 @@ async function bootstrap() {
   app.enableCors({
     origin: configService.frontendUrl,
     credentials: true,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   });
 
   await app.listen(configService.port);
 }
-bootstrap();
+void bootstrap();
