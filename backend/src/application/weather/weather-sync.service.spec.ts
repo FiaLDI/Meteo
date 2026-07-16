@@ -106,5 +106,5 @@ describe('WeatherSyncService', () => {
     expect(weatherRepository.upsertForecast).not.toHaveBeenCalled();
 
     expect(weatherRepository.markAsStale).toHaveBeenCalledWith(city.id);
-  });    
+  });
 });

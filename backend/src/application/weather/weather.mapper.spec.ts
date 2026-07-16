@@ -1,5 +1,5 @@
 import { City } from '@/domain/entities/city.entity';
-import { WeatherApplicationMapper } from './weather.mapper'
+import { WeatherApplicationMapper } from './weather.mapper';
 import { Weather } from '@/domain/entities/weather.entity';
 import { Forecast } from '@/domain/entities/weather.forecast.entity';
 import { GetWeatherResponseDto } from './weather.dto';
@@ -53,7 +53,9 @@ describe('WeatherApplicationMapper', () => {
 
   describe('toResponse', () => {
     it('should map forecast to response dto', () => {
-      expect(WeatherApplicationMapper.toResponse(forecast)).toStrictEqual(expected);
+      expect(WeatherApplicationMapper.toResponse(forecast)).toStrictEqual(
+        expected,
+      );
     });
   });
 });
