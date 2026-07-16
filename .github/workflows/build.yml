@@ -41,6 +41,10 @@ jobs:
         working-directory: ./backend
         run: npm ci
 
+      - name: Prisma dependencies
+        working-directory: ./backend
+        run: npx prisma generate
+
       - name: Lint
         working-directory: ./backend
         run: npm run lint
@@ -53,6 +57,7 @@ jobs:
         working-directory: ./backend
         run: npm run build
   build:
+    needs: test
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
