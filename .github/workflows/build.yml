@@ -11,7 +11,47 @@ permissions:
   contents: read
   packages: write
 
+concurrency:
+  group: test-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: 22  
+
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    strategy:
+      fail-fast: true
+        
+    name: Backend test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: ./backend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./backend
+        run: npm ci
+
+      - name: Lint
+        working-directory: ./backend
+        run: npm run lint
+
+      - name: Unit Tests
+        working-directory: ./backend
+        run: npm run test
+
+      - name: Build
+        working-directory: ./backend
+        run: npm run build
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 20
